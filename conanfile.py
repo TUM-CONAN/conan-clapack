@@ -4,7 +4,7 @@ from conans.tools import unzip
 
 
 class ClapackConan(ConanFile):
-    name = "Clapack"
+    name = "clapack"
     version = "3.2.1"
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake"
