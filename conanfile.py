@@ -25,7 +25,7 @@ class ClapackConan(ConanFile):
     def build(self):
         cmake = CMake(self)
         cmake.definitions["BUILD_SHARED_LIBS"] = self.options.shared
-        cmake.configure()
+        cmake.configure(source_dir="source")
         cmake.build()
         cmake.install()
 
