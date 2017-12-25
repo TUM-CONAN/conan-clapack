@@ -16,7 +16,7 @@ class ClapackConan(ConanFile):
     # exports = "*"
 
     def source(self):
-        self.run("git clone https://github.com/openmeeg/clapack.git ")
+        self.run("git clone https://github.com/openmeeg/clapack.git source")
     
     def imports(self):
         self.copy(pattern="*.dll", dst="bin", src="bin") # From bin to bin
@@ -25,7 +25,7 @@ class ClapackConan(ConanFile):
     def build(self):
         cmake = CMake(self)
         cmake.definitions["BUILD_SHARED_LIBS"] = self.options.shared
-        cmake.configure(source_dir="clapack", build_dir="build")
+        cmake.configure()
         cmake.build()
         cmake.install()
 
@@ -36,6 +36,7 @@ class ClapackConan(ConanFile):
         self.copy(pattern="*.dll", dst="bin", src="package/lib", keep_path=False)
         self.copy(pattern="*.so*", dst="lib", src="package/lib", keep_path=False)
         self.copy(pattern="*.dylib*", dst="lib", src="package/lib", keep_path=False)  
+
 
     def package_info(self):
         suffix = ""
