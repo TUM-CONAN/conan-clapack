@@ -12,7 +12,7 @@ class ClapackConan(ConanFile):
     options = {"shared": [True, False]}
     default_options = "shared=False"
 
-    clapack_modules = ["blas", "lapack", "libf2c"]
+    clapack_modules = ["blas", "lapack", "f2c"]
     # exports = "*"
 
     def source(self):
