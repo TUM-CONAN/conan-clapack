@@ -38,6 +38,8 @@ class ClapackConan(ConanFile):
 
 
     def package_info(self):
+        self.cpp_info.defines.append("HAVE_LAPACK")
+
         # Should probably fork clapack repo and fix this in the CMake Files
         if self.settings.os == "Windows":
             clapack_modules = ["blas", "lapack", "libf2c"]
@@ -47,5 +49,5 @@ class ClapackConan(ConanFile):
         suffix = ""
         if self.settings.build_type == "Debug":
             suffix = "d"
-        for lib in self.clapack_modules:
+        for lib in clapack_modules:
             self.cpp_info.libs.append("%s%s" % (lib, suffix))
