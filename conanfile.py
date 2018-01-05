@@ -12,7 +12,6 @@ class ClapackConan(ConanFile):
     options = {"shared": [True, False]}
     default_options = "shared=False"
 
-    clapack_modules = ["blas", "lapack", "f2c"]
     # exports = "*"
 
     def source(self):
@@ -39,6 +38,12 @@ class ClapackConan(ConanFile):
 
 
     def package_info(self):
+        # Should probably fork clapack repo and fix this in the CMake Files
+        if self.settings.os == "Windows":
+            clapack_modules = ["blas", "lapack", "libf2c"]
+        else:
+            clapack_modules = ["blas", "lapack", "f2c"]
+
         suffix = ""
         if self.settings.build_type == "Debug":
             suffix = "d"
