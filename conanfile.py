@@ -39,6 +39,7 @@ class ClapackConan(ConanFile):
 
 
     def package_info(self):
+        self.cpp_info.defines.extend(["HAVE_LAPACK",])
         suffix = ""
         if self.settings.build_type == "Debug":
             suffix = "d"
