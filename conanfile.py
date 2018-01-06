@@ -6,6 +6,8 @@ from conans.tools import unzip
 class ClapackConan(ConanFile):
     name = "clapack"
     version = "3.2.1"
+
+    short_paths = True
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake"
     # exports = "CMakeLists.txt"
