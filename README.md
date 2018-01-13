@@ -2,8 +2,6 @@
 
 [Conan.io](https://conan.io) package for clapack library. 
 
-The packages generated with this **conanfile** can be found in [conan.io](https://conan.io/source/clapack/3.2.1/ulricheck/stable).
-
 ## Build packages
 
     $ pip install conan_package_tools
@@ -11,20 +9,20 @@ The packages generated with this **conanfile** can be found in [conan.io](https:
     
 ## Upload packages to server
 
-    $ conan upload clapack/3.2.1@ulricheck/stable --all
+    $ conan upload clapack/3.2.1@camposs/stable --all
     
 ## Reuse the packages
 
 ### Basic setup
 
-    $ conan install clapack/3.2.1@ulricheck/stable
+    $ conan install clapack/3.2.1@camposs/stable
     
 ### Project setup
 
 If you handle multiple dependencies in your project is better to add a *conanfile.txt*
     
     [requires]
-    clapack/3.2.1@ulricheck/stable
+    clapack/3.2.1@camposs/stable
 
     [options]
     clapack:shared=true # false

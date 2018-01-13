@@ -8,7 +8,7 @@ class ClapackConan(ConanFile):
     version = "3.2.1"
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake"
-    # exports = "CMakeLists.txt"
+    exports = "FindCLAPACK.txt"
     options = {"shared": [True, False]}
     default_options = "shared=False"
 
@@ -16,7 +16,10 @@ class ClapackConan(ConanFile):
     # exports = "*"
 
     def source(self):
-        self.run("git clone https://github.com/openmeeg/clapack.git source")
+        source_url = "https://github.com/ulricheck/clapack/archive/{0}.tar.gz".format(self.version)
+        archive_name = "clapack-{0}.tar.gz".format(self.version)
+        tools.get(source_url)
+        os.rename(archive_name, "source")
     
     def imports(self):
         self.copy(pattern="*.dll", dst="bin", src="bin") # From bin to bin
