@@ -1,6 +1,5 @@
-from conans import ConanFile, CMake
-from conans.tools import download
-from conans.tools import unzip
+import os
+from conans import ConanFile, CMake, tools
 
 
 class ClapackConan(ConanFile):
