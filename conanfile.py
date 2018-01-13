@@ -47,7 +47,7 @@ class ClapackConan(ConanFile):
 
         # Should probably fork clapack repo and fix this in the CMake Files
         if self.settings.os == "Windows":
-            clapack_modules = ["blas", "lapack", "libf2c"]
+            clapack_modules = ["blas", "lapack", "f2c"]
         else:
             clapack_modules = ["blas", "lapack", "f2c"]
 
