@@ -5,6 +5,7 @@ from conans import ConanFile, CMake, tools
 class ClapackConan(ConanFile):
     name = "clapack"
     version = "3.2.1"
+    url = "https://github.com/ulricheck/conan-clapack.git"
 
     short_paths = True
     settings = "os", "compiler", "build_type", "arch"
