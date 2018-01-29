@@ -29,6 +29,8 @@ class ClapackConan(ConanFile):
     def build(self):
         cmake = CMake(self)
         cmake.definitions["BUILD_SHARED_LIBS"] = self.options.shared
+        if self.settings.os == "Linux":
+            cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = True
         cmake.configure(source_dir="source")
         cmake.build()
         cmake.install()
@@ -44,12 +46,7 @@ class ClapackConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.defines.append("HAVE_LAPACK")
-
-        # Should probably fork clapack repo and fix this in the CMake Files
-        if self.settings.os == "Windows":
-            clapack_modules = ["blas", "lapack", "f2c"]
-        else:
-            clapack_modules = ["blas", "lapack", "f2c"]
+        clapack_modules = ["blas", "lapack", "f2c"]
 
         suffix = ""
         if self.settings.build_type == "Debug":
