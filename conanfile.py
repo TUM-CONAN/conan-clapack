@@ -29,6 +29,8 @@ class ClapackConan(ConanFile):
     def build(self):
         cmake = CMake(self)
         cmake.definitions["BUILD_SHARED_LIBS"] = self.options.shared
+        if self.settings.os == "Linux":
+            cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = True
         cmake.configure(source_dir="source")
         cmake.build()
         cmake.install()
@@ -45,11 +47,9 @@ class ClapackConan(ConanFile):
     def package_info(self):
         self.cpp_info.defines.append("HAVE_LAPACK")
         clapack_modules = ["blas", "lapack", "f2c"]
-
         suffix = ""
         if self.settings.os == "Windows":
             if self.settings.build_type == "Debug":
                 suffix = "d"
-
         for lib in clapack_modules:
             self.cpp_info.libs.append("%s%s" % (lib, suffix))
