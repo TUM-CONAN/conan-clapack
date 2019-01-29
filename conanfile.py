@@ -25,9 +25,9 @@ class ClapackConan(ConanFile):
         tools.get(source_url)
         os.rename(archive_name, "source")
     
-    def imports(self):
-        self.copy(pattern="*.dll", dst="bin", src="bin") # From bin to bin
-        self.copy(pattern="*.dylib*", dst="bin", src="lib") 
+    # def imports(self):
+    #     self.copy(pattern="*.dll", dst="bin", src="bin") # From bin to bin
+    #     self.copy(pattern="*.dylib*", dst="bin", src="lib") 
        
     def build(self):
         cmake = CMake(self)
