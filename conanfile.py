@@ -30,6 +30,10 @@ class ClapackConan(ConanFile):
     #     self.copy(pattern="*.dylib*", dst="bin", src="lib") 
        
     def build(self):
+        if tools.os_info.is_macos:
+            tools.replace_in_file(os.path.join("source", "BLAS", "SRC", "xerbla.c"), 
+            '#include "blaswrap.h"',
+            '#include "blaswrap.h"\n#include "stdio.h"')
         cmake = CMake(self)
         cmake.definitions["BUILD_SHARED_LIBS"] = self.options.shared
         if self.settings.os == "Linux":
