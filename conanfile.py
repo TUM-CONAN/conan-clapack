@@ -1,6 +1,13 @@
-import os
-from conans import ConanFile, CMake, tools
+from conan import ConanFile
+from conan.tools.cmake import CMake, CMakeToolchain, cmake_layout, CMakeDeps
+from conan.tools.gnu import PkgConfigDeps
+from conan.tools.scm import Git
+from conan.tools.files import save, patch, rmdir, mkdir, rename, copy, get, replace_in_file, collect_libs
+from conan.tools.build import check_min_cppstd, stdcpp_library
+from conan.tools.system.package_manager import Apt
 
+import os
+import textwrap
 
 class ClapackConan(ConanFile):
     name = "clapack"
@@ -9,10 +16,12 @@ class ClapackConan(ConanFile):
 
     short_paths = True
     settings = "os", "compiler", "build_type", "arch"
-    generators = "cmake"
-    exports = "FindCLAPACK.txt"
+
     options = {"shared": [True, False]}
-    default_options = "shared=False"
+
+    default_options = {
+        "shared": False,
+    }
 
     # exports = "*"
 
@@ -22,37 +31,46 @@ class ClapackConan(ConanFile):
     def source(self):
         source_url = "https://github.com/ulricheck/clapack/archive/{0}.tar.gz".format(self.version)
         archive_name = "clapack-{0}".format(self.version)
-        tools.get(source_url)
-        os.rename(archive_name, "source")
-    
-    # def imports(self):
-    #     self.copy(pattern="*.dll", dst="bin", src="bin") # From bin to bin
-    #     self.copy(pattern="*.dylib*", dst="bin", src="lib") 
+        get(self, source_url, strip_root=True)
        
+
+    def generate(self):
+        tc = CMakeToolchain(self)
+
+        def add_cmake_option(option, value):
+            var_name = "{}".format(option).upper()
+            value_str = "{}".format(value)
+            var_value = "ON" if value_str == 'True' else "OFF" if value_str == 'False' else value_str
+            tc.variables[var_name] = var_value
+
+        for option, value in self.options.items():
+            add_cmake_option(option, value)
+
+        tc.cache_variables["CLAPACK_BUILD_TESTING"] = "OFF"
+
+        tc.generate()
+
+        deps = CMakeDeps(self)
+        deps.generate()
+
+        deps = PkgConfigDeps(self)
+        deps.generate()
+
+    def layout(self):
+        cmake_layout(self)
+
     def build(self):
-        if tools.os_info.is_macos:
-            tools.replace_in_file(os.path.join("source", "BLAS", "SRC", "xerbla.c"), 
-            '#include "blaswrap.h"',
-            '#include "blaswrap.h"\n#include "stdio.h"')
         cmake = CMake(self)
-        cmake.definitions["BUILD_SHARED_LIBS"] = self.options.shared
-        if self.settings.os == "Linux":
-            cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = True
-        cmake.configure(source_dir="source")
+        cmake.configure()
         cmake.build()
-        cmake.install()
 
     def package(self):
-        self.copy(pattern='*.h' , dst="include", src="package/include", keep_path=False)
-        self.copy(pattern='*.cmake' , dst="cmake", src="package/cmake", keep_path=False)
-        self.copy(pattern="*.lib", dst="lib", src="package/lib", keep_path=False)
-        self.copy(pattern="*.dll", dst="bin", src="package/lib", keep_path=False)
-        self.copy(pattern="*.so*", dst="lib", src="package/lib", keep_path=False)
-        self.copy(pattern="*.dylib*", dst="lib", src="package/lib", keep_path=False)  
+        cmake = CMake(self)
+        cmake.install()
 
 
     def package_info(self):
-        self.cpp_info.defines.append("HAVE_LAPACK")
+        #self.cpp_info.defines.append("HAVE_LAPACK")
         clapack_modules = ["blas", "lapack", "f2c"]
         suffix = ""
         if self.settings.os == "Windows":
