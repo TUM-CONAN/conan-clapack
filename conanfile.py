@@ -26,7 +26,8 @@ class ClapackConan(ConanFile):
     # exports = "*"
 
     def configure(self):
-        del self.settings.compiler.libcxx
+        if self.settings.compiler != "msvc":
+            del self.settings.compiler.libcxx
 
     def source(self):
         source_url = "https://github.com/ulricheck/clapack/archive/{0}.tar.gz".format(self.version)
